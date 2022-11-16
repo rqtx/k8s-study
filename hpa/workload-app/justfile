@@ -1,0 +1,17 @@
+# Build images
+docker-build:
+    docker build -t rqtx/workload:server --build-arg APPNAME=server .
+    docker build -t rqtx/workload:client --build-arg APPNAME=client .
+
+# Build and push to Dockerhub
+docker-push:
+    docker buildx build --push --platform linux/amd64,linux/arm64/v8 -t rqtx/workload:server --build-arg APPNAME=server .
+    docker buildx build --push --platform linux/amd64,linux/arm64/v8 -t rqtx/workload:client --build-arg APPNAME=client .
+
+# Run server container
+run-server:
+    docker run --rm --name=workload-server --cpus=1 --memory=256m -e PORT=8080 --network host rqtx/workload:server
+    
+# Run client container
+run-client args:
+    docker run --rm --name=workload-client --network host rqtx/workload:client {{args}}

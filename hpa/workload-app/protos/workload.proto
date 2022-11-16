@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package workload;
+
+service Workload {
+    rpc Cpu (WorkloadRequest) returns (WorkloadResponse);
+    rpc Memory (WorkloadRequest) returns (WorkloadResponse);
+}
+
+message WorkloadRequest {
+    uint32 workload = 1;
+    uint64 duration = 2;
+}
+
+message WorkloadResponse {}
