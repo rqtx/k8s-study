@@ -24,3 +24,6 @@ tonic = "0.8.2"
 
 [build-dependencies]
 tonic-build = "0.8.2"
+
+[profile.release]
+strip = true        # Automatically strip symbols from the binary.

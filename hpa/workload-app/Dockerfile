@@ -49,6 +49,8 @@ RUN mv /app/target/x86_64-unknown-linux-musl/release/${APPNAME} /app/${APPNAME}
 # Builder ARM64 #
 #################
 
+# Thanks to Ilkka Anttonen https://gitlab.com/sirile/rust-multiarch-image-test
+
 FROM --platform=$BUILDPLATFORM builder AS build-arm64
 
 ARG APPNAME
@@ -103,5 +105,3 @@ ENTRYPOINT ["app"]
 #########
 
 FROM final-${TARGETARCH}
-
-# Thanks to Ilkka Anttonen https://gitlab.com/sirile/rust-multiarch-image-test
