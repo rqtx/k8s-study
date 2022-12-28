@@ -3,6 +3,7 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use std::thread::sleep;
 use tonic::{Request, Response, Status};
 use workload::{WorkloadResponse, WorkloadRequest, workload_server::{Workload, WorkloadServer}};
+use crate::config;
 
 pub mod workload {
     tonic::include_proto!("workload");
@@ -41,10 +42,11 @@ fn cpu(workload: u32, duration: u64) {
     let on_time: u128 = (time_of_run * cpu_time_utilization) as u128;
     let off_time: u64 = (time_of_run * (1.0-cpu_time_utilization)) as u64;
     let start = now();
+    let config = config::get_config();
     while now() - start < duration_ms {
         let work = now();
         while now() - work < on_time {
-            fibonacci_reccursive(25);
+            fibonacci_reccursive(config.fibo);
         }
         sleep(Duration::from_millis(off_time));
     }

@@ -58,7 +58,7 @@ ARG APPNAME
 WORKDIR /app
 COPY . .
 RUN cargo build --release --target aarch64-unknown-linux-musl
-RUN mv /app/target/aarch64-unknown-linux-musl/release/${appname} /app/${appname}
+RUN mv /app/target/aarch64-unknown-linux-musl/release/${APPNAME} /app/${APPNAME}
 
 ###############
 # Final AMD64 #

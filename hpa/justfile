@@ -1,9 +1,20 @@
-alias c := create
-
 # create kind cluster based on kind-config.yml
 create:
-    kind create cluster --config kind-config.yml
+  kind create cluster --config kind-config.yml
+  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  helm repo update
+  helm install prometheus prometheus-community/kube-prometheus-stack \
+    -n monitoring \
+    --create-namespace
+  helm install prometheus-adapter prometheus-community/prometheus-adapter \
+    -n monitoring \
+    -f values-adapter.yml
+  kubectl apply -f workload.yml
 
 # delete kind cluster
-delete:
-    kind delete cluster
+kind-delete:
+  kind delete cluster --name hpa
+
+# start proxy to workload app
+proxy:
+  kubectl -n default port-forward svc/workload 8080:8080

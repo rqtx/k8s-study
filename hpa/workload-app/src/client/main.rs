@@ -25,7 +25,7 @@ enum SubCommand {
         /// CPU usage percetage
         usage: u32,
         #[clap(short, long)]
-        /// CPU usage duration
+        /// CPU usage duration in seconds
         duration: u64
     },
     /// Memory workload
@@ -34,7 +34,7 @@ enum SubCommand {
         /// Quantity of memory to alloc in MB
         usage: u32,
         #[clap(short, long)]
-        /// Memory usage time duration
+        /// Memory usage time duration in seconds
         duration: u64,
     },
 }
