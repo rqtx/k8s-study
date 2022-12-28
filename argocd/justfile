@@ -1,0 +1,9 @@
+alias c := create
+
+# create kind cluster based on kind-config.yml
+create:
+    kind create cluster --config kind-config.yml
+
+# delete kind cluster
+delete:
+    kind delete cluster
