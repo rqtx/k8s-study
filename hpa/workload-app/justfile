@@ -14,4 +14,4 @@ run-server:
     
 # Run client container
 run-client args:
-    docker run --rm --name=workload-client --network host rqtx/workload:client {{args}}
+    docker run --rm --name=workload-client --network="host" rqtx/workload:client {{args}}

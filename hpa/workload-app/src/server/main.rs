@@ -1,26 +1,15 @@
 
 mod services;
 use services::{create_router};
-use serde::Deserialize;
-
-#[derive(Deserialize, Debug)]
-struct Configuration {
-    #[serde(default="default_port")]
-    port: u16,
-}
+mod config;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let config = match envy::from_env::<Configuration>() {
-        Ok(config) => config,
-        Err(error) => panic!("{:#?}", error)
-    };
-    println!("Listening on {}:{}", "[::1]", config.port);
-    let addr = format!("{}:{}", "[::1]", config.port).parse().unwrap();
-    create_router().serve(addr).await?;
+    
+    let config = config::get_config();
+    let socket = format!("{}:{}", config.addr, config.port).parse().unwrap();
+    println!("Listening on {}", socket);
+    create_router().serve(socket).await?;
     Ok(())
 }
 
-fn default_port() -> u16 { 
-    8080
-} 

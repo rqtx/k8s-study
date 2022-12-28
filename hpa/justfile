@@ -1,0 +1,19 @@
+kind-create:
+  kind create cluster --config kind-config.yml
+
+kind-delete:
+  kind delete cluster --name hpa
+
+init:
+  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  helm repo update
+  helm install prometheus prometheus-community/kube-prometheus-stack \
+    -n monitoring \
+    --create-namespace
+  helm install prometheus-adapter prometheus-community/prometheus-adapter \
+    -n monitoring \
+    -f values-adapter.yml
+  kubectl apply -f workload.yml
+
+proxy:
+  kubectl -n default port-forward svc/workload 8080:8080
