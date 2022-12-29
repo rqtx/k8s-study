@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: whoami-deployment
-  namespace: test
+  namespace: demo
 spec:
   replicas: 1
   selector:
@@ -26,24 +26,3 @@ spec:
           requests:
             memory: "4Mi"
             cpu: "1m"
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            preference:
-              matchExpressions:
-              - key: model
-                operator: In
-                values:
-                - rpi3
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 2
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - whoami
-              topologyKey: "kubernetes.io/hostname"
