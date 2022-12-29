@@ -1,28 +1,20 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: whoami-deployment
+  name: hello-kubernetes
   namespace: demo
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: whoami
+      app: hello-kubernetes
   template:
     metadata:
       labels:
-        app: whoami
+        app: hello-kubernetes
     spec:
       containers:
-      - name: whoami-container
-        image: kingdevnl/whoami:arm
-        ports: 
-        - containerPort: 80
-        resources:
-          limits:
-            memory: "4Mi"
-            cpu: "1m"
-          requests:
-            memory: "4Mi"
-            cpu: "1m"
+      - name: hello-kubernetes
+        image: paulbouwer/hello-kubernetes:1.8
+        ports:
+        - containerPort: 8080
