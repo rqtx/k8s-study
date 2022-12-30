@@ -1,9 +1,28 @@
-alias c := create
-
 # create kind cluster based on kind-config.yml
-create:
-    kind create cluster --config kind-config.yml
+kind-create:
+  kind create cluster --config kind-config.yml
+  kubectl create namespace argocd
+  kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 # delete kind cluster
-delete:
-    kind delete cluster
+kind-delete:
+  kind delete cluster --name argocd
+
+# start proxy to workload app
+proxy:
+  kubectl -n argocd port-forward svc/argocd-server 8080:80
+
+argo-admin-pass:
+  @kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+argo-login:
+  argocd login localhost:8080 --username admin --password "$(just argo-admin-pass)" --insecure
+
+argo-app-create:
+  argocd app create demo \
+    --project default \
+    --repo https://github.com/rqtx/k8s-study \
+    --path "./argocd/manifests" \
+    --dest-namespace demo \
+    --dest-server https://kubernetes.default.svc \
+    --sync-policy automated
