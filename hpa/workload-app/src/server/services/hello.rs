@@ -12,7 +12,9 @@ pub struct HelloService {}
 impl Hello for HelloService {
     async fn say(&self, request: Request<HelloRequest>) -> Result<Response<HelloResponse>, Status> {
         let req = request.into_inner();
-        Ok(Response::new(hello::HelloResponse {message: {format!("Hello {}", req.name)}}))
+        let msg = format!("Hello {}", req.name);
+        println!("{}", msg);
+        Ok(Response::new(hello::HelloResponse { message: {msg} }))
     }
 }
 
