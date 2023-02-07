@@ -1,0 +1,11 @@
+# Run kube-bench inside docker
+docker:
+  docker run --pid=host -v /etc:/etc:ro -v /var:/var:ro -v $(which kubectl):/usr/local/mount-from-host/bin/kubectl -v ~/.kube:/.kube -e KUBECONFIG=/.kube/config -t docker.io/aquasec/kube-bench:latest run
+
+# create kind cluster based on kind-config.yml
+kind-create:
+  kind create cluster --config kind-config.yml
+  
+# delete kind cluster
+kind-delete:
+  kind delete cluster --name kube-bench

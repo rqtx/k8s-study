@@ -1,0 +1,13 @@
+containerSecurityContext: # line 108
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+    #add:
+    #  - NET_BIND_SERVICE
+  allowPrivilegeEscalation: false
+
+config: # line 338
+  serverPort: 3101
+  clients:
+    - url: http://loki-loki-distributed-gateway/loki/api/v1/push

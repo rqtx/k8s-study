@@ -1,0 +1,2 @@
+run file:
+  docker run -i kubesec/kubesec:v2.12.0 scan /dev/stdin < {{file}}

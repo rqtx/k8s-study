@@ -1,0 +1,60 @@
+# https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+
+## Provide a name in place of kube-prometheus-stack for `app:` labels
+##
+nameOverride: ""
+
+## Override the deployment namespace
+##
+namespaceOverride: "monitoring"
+
+commonLabels:           # line 27
+  prometheus: monitoring
+
+alertmanagerSpec: #line 475
+    ## AlertmanagerConfigs to be selected to merge and configure Alertmanager with.
+    alertmanagerConfigSelector:
+      matchLabels:
+        resource: prometheus
+
+grafana:
+  adminPassword: password # line 732
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      labelValue: "1"
+    datasources:
+      enabled: true
+      defaultDatasourceEnabled: true
+      isDefaultDatasource: true
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      url: http://loki-loki-distributed-query-frontend.monitoring:3100
+
+serviceMonitorSelector: # line 2050
+  matchLabels: 
+    prometheus: monitoring
+
+prometheus: #line 2217
+  prometheusSpec: #line 2607
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+    retention: 10d ## How long to retain metrics
+#    resources:
+#      limits:
+#        cpu: 200m
+#        memory: 200Mi
+#      requests:
+#        cpu: 100m
+#        memory: 100Mi
+#    storageSpec:
+#      volumeClaimTemplate:
+#        spec:
+#          storageClassName: nfs-client
+#          accessModes: ["ReadWriteOnce"]
+#          resources:
+#            requests:
+#              storage: 50Gi

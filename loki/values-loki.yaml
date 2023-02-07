@@ -1,0 +1,14 @@
+# Configuration for the write pod(s)
+write: #line 650
+  # -- Number of replicas for the write
+  replicas: 1
+
+# Configuration for the read pod(s)
+read: #line 778
+  # -- Number of replicas for the read
+  replicas: 1
+
+# Configuration for the backend pod(s)
+backend: #line 859
+  # -- Number of replicas for the backend
+  replicas: 1

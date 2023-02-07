@@ -1,0 +1,18 @@
+# create kind cluster based on kind-config.yml
+create:
+  kind create cluster --config kind-config.yml
+  kubectl create ns monitoring
+
+# Helm update
+update:
+  helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -n monitoring --values prometheus-values.yaml
+  helm upgrade --install promtail grafana/promtail -f promtail-values.yaml -n monitoring
+  helm upgrade --install loki grafana/loki-distributed -n monitoring
+
+# delete kind cluster
+delete:
+  kind delete cluster --name loki
+
+proxy:
+  kubectl -n monitoring port-forward svc/prometheus-grafana 8080:80
+
