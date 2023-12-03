@@ -1,0 +1,29 @@
+# create kind cluster based on kind-config.yml
+create: && upgrade
+  kind create cluster --config kind-config.yml
+
+upgrade:
+  helm upgrade --install consul hashicorp/consul --namespace vault --values consul-values.yaml --create-namespace
+  helm upgrade --install vault hashicorp/vault --namespace vault -f vault-values.yaml --create-namespace
+
+# delete kind cluster
+delete:
+  kind delete cluster --name vault
+
+vault-init:
+  kubectl exec -n vault vault-0 -- vault operator init -key-shares=1 -key-threshold=1 -format=json > cluster-keys.json
+ 
+vault-unseal:
+  #!/usr/bin/env bash
+  VAULT_UNSEAL_KEY=$(cat cluster-keys.json | jq -r ".unseal_keys_b64[]")
+  kubectl exec -n vault vault-0 -- vault operator unseal $VAULT_UNSEAL_KEY
+  kubectl exec -n vault vault-1 -- vault operator unseal $VAULT_UNSEAL_KEY
+  kubectl exec -n vault vault-2 -- vault operator unseal $VAULT_UNSEAL_KEY
+
+# start consul proxy
+proxy-consul:
+  kubectl -n vault port-forward svc/consul-consul-ui 8080:80
+
+# start vault proxy
+proxy-vault:
+  kubectl -n vault port-forward svc/vault 8200:8200

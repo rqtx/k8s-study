@@ -1,0 +1,1 @@
+- https://dev.to/fkurz/detecting-kubernetes-api-deprecations-with-pluto-3g2m
